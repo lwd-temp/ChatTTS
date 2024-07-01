@@ -10,7 +10,7 @@
 [![Huggingface](https://img.shields.io/badge/🤗%20-Models-yellow.svg?style=for-the-badge)](https://huggingface.co/2Noise/ChatTTS)
 [![Open In Colab](https://img.shields.io/badge/Colab-F9AB00?style=for-the-badge&logo=googlecolab&color=525252)](https://colab.research.google.com/github/2noise/ChatTTS/blob/main/examples/ipynb/colab.ipynb)
 
-[**English**](../../README.md) | **简体中文** | [**日本語**](../jp/README.md) | [**Русский**](../ru/README.md)
+[**English**](../../README.md) | **简体中文** | [**日本語**](../jp/README.md) | [**Русский**](../ru/README.md) | [**Español**](../es/README.md)
 
 </div>
 
@@ -123,6 +123,7 @@ python examples/cmd/run.py "Please input your text."
 import ChatTTS
 from IPython.display import Audio
 import torchaudio
+import torch
 
 chat = ChatTTS.Chat()
 chat.load(compile=False) # Set to True for better performance
@@ -141,6 +142,7 @@ torchaudio.save("output1.wav", torch.from_numpy(wavs[0]), 24000)
 # Sample a speaker from Gaussian.
 
 rand_spk = chat.sample_random_speaker()
+print(rand_spk) # save it for later timbre recovery
 
 params_infer_code = {
   'spk_emb': rand_spk, # add sampled speaker 

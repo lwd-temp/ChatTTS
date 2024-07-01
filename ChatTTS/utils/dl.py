@@ -3,9 +3,11 @@ from pathlib import Path
 import hashlib
 import requests
 from io import BytesIO
+from typing import Dict
 from mmap import mmap, ACCESS_READ
 
 from .log import logger
+
 
 def sha256(fileno: int) -> str:
     data = mmap(fileno, 0, access=ACCESS_READ)
@@ -41,11 +43,9 @@ def check_model(
     return True
 
 
-def check_all_assets(update=False) -> bool:
-    BASE_DIR = Path(os.getcwd())
-
+def check_all_assets(base_dir: Path, sha256_map: Dict[str, str], update=False) -> bool:
     logger.get_logger().info("checking assets...")
-    current_dir = BASE_DIR / "asset"
+    current_dir = base_dir / "asset"
     names = [
         "Decoder.pt",
         "DVAE.pt",
@@ -57,12 +57,12 @@ def check_all_assets(update=False) -> bool:
     for model in names:
         menv = model.replace(".", "_")
         if not check_model(
-            current_dir, model, os.environ[f"sha256_asset_{menv}"], update
+            current_dir, model, sha256_map[f"sha256_asset_{menv}"], update
         ):
             return False
 
     logger.get_logger().info("checking configs...")
-    current_dir = BASE_DIR / "config"
+    current_dir = base_dir / "config"
     names = [
         "decoder.yaml",
         "dvae.yaml",
@@ -73,7 +73,7 @@ def check_all_assets(update=False) -> bool:
     for model in names:
         menv = model.replace(".", "_")
         if not check_model(
-            current_dir, model, os.environ[f"sha256_config_{menv}"], update
+            current_dir, model, sha256_map[f"sha256_config_{menv}"], update
         ):
             return False
 
